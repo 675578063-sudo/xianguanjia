@@ -1,0 +1,55 @@
+/* pages/detail/detail.wxss */
+
+.processed-badge {
+  display: inline-block;
+  margin-left: 12rpx;
+  padding: 4rpx 16rpx;
+  font-size: 22rpx;
+  border-radius: 40rpx;
+  background: #e5e7eb;
+  color: #6b7280;
+}
+
+/* 操作按钮行 */
+.action-row {
+  display: flex;
+  margin-top: 24rpx;
+}
+
+.act-btn {
+  flex: 1;
+  text-align: center;
+  padding: 24rpx 0;
+  font-size: 28rpx;
+  font-weight: 500;
+  border-radius: 12rpx;
+  border: 1rpx solid transparent;
+}
+.act-btn::after { border: none; }
+
+.action-row .act-btn + .act-btn { margin-left: 16rpx; }
+
+.act-edit {
+  background: #ffffff;
+  color: #4f46e5;
+  border-color: #4f46e5;
+}
+.act-eaten {
+  background: #4f46e5;
+  color: #ffffff;
+}
+.act-discard {
+  background: #fef2f2;
+  color: #ef4444;
+  border-color: #fecaca;
+}
+.act-partial {
+  background: #ffffff;
+  color: #374151;
+  border-color: #e5e7eb;
+}
+.act-delete {
+  background: #ffffff;
+  color: #ef4444;
+  border-color: #ef4444;
+}

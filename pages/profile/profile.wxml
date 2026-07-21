@@ -1,0 +1,124 @@
+<!-- pages/profile/profile.wxml - 个人中心 -->
+<view class="container">
+
+  <!-- 用户信息区 -->
+  <view class="profile-header">
+    <!-- 未登录状态 -->
+    <block wx:if="{{!isLoggedIn}}">
+      <view class="login-area">
+        <view class="avatar-placeholder">
+          <button class="avatar-btn" open-type="chooseAvatar" bind:chooseavatar="onChooseAvatar" catchtap="onAvatarTap">
+            <image class="avatar-img" src="/assets/default-avatar.png" mode="aspectFill"></image>
+            <view class="avatar-tip">点击选择头像</view>
+          </button>
+        </view>
+        <view class="login-text">选择头像开始登录</view>
+      </view>
+    </block>
+
+    <!-- 已登录状态 -->
+    <block wx:else>
+      <view class="user-info-area">
+        <view class="avatar-editable">
+          <button class="avatar-btn-small" open-type="chooseAvatar" bind:chooseavatar="onChooseAvatar" catchtap="onAvatarTap">
+            <image class="avatar-img-small" src="{{userInfo.avatarUrl}}" mode="aspectFill"></image>
+          </button>
+          <view class="edit-badge">✎</view>
+        </view>
+        <view class="user-detail">
+          <view class="user-name" bindtap="onEditNickname">{{userInfo.nickName}} ✎</view>
+          <view class="user-id">ID: {{userInfo.userId}}</view>
+        </view>
+        <view class="logout-btn" bindtap="onLogout">退出</view>
+      </view>
+    </block>
+  </view>
+
+  <!-- 昵称输入弹窗 -->
+  <view class="nickname-modal" wx:if="{{showNicknameInput}}">
+    <view class="modal-mask" bindtap="onNicknameSkip"></view>
+    <view class="modal-content">
+      <view class="modal-title">设置昵称</view>
+      <input class="nickname-input" type="nickname" placeholder="请输入昵称" value="{{tempNickname}}" bindinput="onNicknameInput" focus="{{showNicknameInput}}" />
+      <view class="modal-btns">
+        <view class="modal-btn cancel" bindtap="onNicknameSkip">跳过</view>
+        <view class="modal-btn confirm" bindtap="onNicknameConfirm">确认</view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 我的统计 -->
+  <view class="section">
+    <view class="section-title">📊 我的统计</view>
+    <view class="my-stats-grid">
+      <view class="my-stat-item">
+        <view class="my-stat-num">{{totalFoods}}</view>
+        <view class="my-stat-label">在管食品</view>
+      </view>
+      <view class="my-stat-item danger">
+        <view class="my-stat-num">{{expiredCount}}</view>
+        <view class="my-stat-label">已过期</view>
+      </view>
+      <view class="my-stat-item warning">
+        <view class="my-stat-num">{{soonExpireCount}}</view>
+        <view class="my-stat-label">即将过期</view>
+      </view>
+      <view class="my-stat-item">
+        <view class="my-stat-num">{{wasteCount}}</view>
+        <view class="my-stat-label">浪费记录</view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 浪费金额 -->
+  <view class="section" wx:if="{{wasteMoney > 0}}">
+    <view class="section-title">💸 浪费金额</view>
+    <view class="waste-money-display">
+      <text class="waste-money-value">¥{{wasteMoney}}</text>
+      <text class="waste-money-desc">累计浪费</text>
+    </view>
+  </view>
+
+  <!-- 提醒设置 -->
+  <view class="section">
+    <view class="section-title">🔔 提醒设置</view>
+    <view class="setting-row">
+      <view class="setting-label">提前提醒天数</view>
+      <picker range="{{['1天','3天','7天']}}" value="{{remindDays === 1 ? 0 : remindDays === 3 ? 1 : 2}}" bindchange="onRemindDaysChange">
+        <view class="setting-value">{{remindDays}}天 ▾</view>
+      </picker>
+    </view>
+    <view class="setting-row">
+      <view class="setting-label">提醒时间</view>
+      <picker mode="time" value="{{remindTime}}" bindchange="onRemindTimeChange">
+        <view class="setting-value">{{remindTime}} ▾</view>
+      </picker>
+    </view>
+    <view class="subscribe-row">
+      <view class="subscribe-desc">开启到期提醒推送（需授权订阅消息）</view>
+      <button class="subscribe-btn" bindtap="onRequestSubscribe">开启提醒</button>
+    </view>
+  </view>
+
+  <!-- 数据管理 -->
+  <view class="section">
+    <view class="section-title">🗂️ 数据管理</view>
+    <view class="action-row" bindtap="onExportData">
+      <view class="action-icon">📤</view>
+      <view class="action-text">导出数据</view>
+      <view class="action-arrow">›</view>
+    </view>
+    <view class="action-row danger" bindtap="onClearData">
+      <view class="action-icon">🗑️</view>
+      <view class="action-text">清空所有数据</view>
+      <view class="action-arrow">›</view>
+    </view>
+  </view>
+
+  <!-- 关于 -->
+  <view class="section" bindtap="onAbout">
+    <view class="section-title">💡 关于鲜管家</view>
+    <view class="about-text">v1.0 · 食品保质期管理小程序</view>
+  </view>
+
+</view>

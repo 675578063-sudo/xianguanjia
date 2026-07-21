@@ -1,0 +1,51 @@
+<!-- pages/stats/stats.wxml -->
+<view class="container">
+  <!-- Stats -->
+  <view class="stats-grid">
+    <view class="stat-card info">
+      <view class="stat-label">当前库存价值</view>
+      <view class="stat-value">{{totalValue}}</view>
+      <view class="stat-unit">元</view>
+    </view>
+    <view class="stat-card danger">
+      <view class="stat-label">累计浪费</view>
+      <view class="stat-value">{{wasteValue}}</view>
+      <view class="stat-unit">元 · {{wasteCount}}项</view>
+    </view>
+  </view>
+
+  <!-- Category chart -->
+  <view class="section">
+    <view class="section-title">📊 分类分布</view>
+    <view wx:if="{{catChart.length > 0}}">
+      <view class="waste-bar" wx:for="{{catChart}}" wx:key="name">
+        <view class="waste-cat">{{item.name}}</view>
+        <view class="waste-track">
+          <view class="waste-fill" style="width:{{item.percent}}%;background:#4f46e5;"></view>
+        </view>
+        <view class="waste-num">{{item.count}}项</view>
+      </view>
+    </view>
+    <view wx:else class="empty-state">
+      <view class="empty-text">暂无数据</view>
+    </view>
+  </view>
+
+  <!-- Waste chart -->
+  <view class="section">
+    <view class="section-title">🗑️ 浪费记录</view>
+    <view wx:if="{{wasteChart.length > 0}}">
+      <view class="waste-bar" wx:for="{{wasteChart}}" wx:key="name">
+        <view class="waste-cat">{{item.name}}</view>
+        <view class="waste-track">
+          <view class="waste-fill" style="width:{{item.percent}}%;background:#ef4444;"></view>
+        </view>
+        <view class="waste-num">{{item.value}}元</view>
+      </view>
+    </view>
+    <view wx:else class="empty-state">
+      <view class="empty-icon">✅</view>
+      <view class="empty-text">暂无浪费记录，继续保持！</view>
+    </view>
+  </view>
+</view>

@@ -1,0 +1,138 @@
+<!-- pages/add/add.wxml -->
+<view class="container">
+  <!-- 必填：食品名称 -->
+  <view class="form-group">
+    <view class="form-label">食品名称 <text class="req">*</text></view>
+    <input class="form-input" placeholder="如：伊利纯牛奶" value="{{name}}" bindinput="onInput" bind:keyboardheightchange="onKeyboardHeightChange" data-field="name" />
+  </view>
+
+  <!-- 必填：分类（后置可选网格） -->
+  <view class="form-group">
+    <view class="form-label">选择分类</view>
+    <view class="category-grid">
+      <view class="category-btn {{item.active ? 'active' : ''}}" wx:for="{{categories}}" wx:key="id" bindtap="onCategoryTap" data-id="{{item.id}}">
+        <view class="cat-icon">{{item.icon}}</view>
+        {{item.name}}
+      </view>
+    </view>
+  </view>
+
+  <!-- 必填：保质期填写方式（二选一） -->
+  <view class="form-group">
+    <view class="form-label">保质期填写方式</view>
+    <view class="segmented">
+      <view class="segmented-item {{dateMode === 'produce' ? 'active' : ''}}" bindtap="onDateModeChange" data-mode="produce">生产日期 + 保质期</view>
+      <view class="segmented-item {{dateMode === 'direct' ? 'active' : ''}}" bindtap="onDateModeChange" data-mode="direct">直接填到期日</view>
+    </view>
+  </view>
+
+  <!-- 生产日期 + 保质期 -->
+  <block wx:if="{{dateMode === 'produce'}}">
+    <view class="form-row">
+      <view class="form-group">
+        <view class="form-label">生产日期 <text class="req">*</text></view>
+        <picker mode="date" value="{{productionDate}}" bindchange="onDatePick" data-field="productionDate">
+          <view class="picker-display {{productionDate ? '' : 'placeholder'}}">{{productionDate || '选择日期'}}</view>
+        </picker>
+      </view>
+      <view class="form-group">
+        <view class="form-label">保质期天数 <text class="req">*</text></view>
+        <input class="form-input" type="number" placeholder="如：7" value="{{shelfLife}}" bindinput="onInput" bind:keyboardheightchange="onKeyboardHeightChange" data-field="shelfLife" />
+      </view>
+    </view>
+  </block>
+
+  <!-- 直接填到期日 -->
+  <block wx:else>
+    <view class="form-group">
+      <view class="form-label">到期日期 <text class="req">*</text></view>
+      <picker mode="date" value="{{expiryDate}}" bindchange="onDatePick" data-field="expiryDate">
+        <view class="picker-display {{expiryDate ? '' : 'placeholder'}}">{{expiryDate || '选择日期'}}</view>
+      </picker>
+    </view>
+  </block>
+
+  <!-- 保存前预览：最终到期日 + 来源（两种模式均显示） -->
+  <view class="expiry-preview" wx:if="{{expiryPreview}}">
+    <view class="ep-row">
+      <text class="ep-label">最终到期日</text>
+      <text class="ep-value">{{expiryPreview}}</text>
+    </view>
+    <view class="ep-row">
+      <text class="ep-label">日期来源</text>
+      <text class="ep-source">{{expirySourceText}}</text>
+    </view>
+  </view>
+
+  <!-- 更多信息（选填，默认折叠） -->
+  <view class="more-header" bindtap="onToggleMore">
+    <text class="more-title">更多信息（选填）</text>
+    <text class="more-chevron">{{showMore ? '▾' : '▸'}}</text>
+  </view>
+
+  <view wx:if="{{showMore}}">
+    <!-- 品牌 / 备注 -->
+    <view class="form-group">
+      <view class="form-label">品牌 / 备注</view>
+      <input class="form-input" placeholder="如：伊利 / 1L装" value="{{brand}}" bindinput="onInput" bind:keyboardheightchange="onKeyboardHeightChange" data-field="brand" />
+    </view>
+
+    <!-- 数量 + 单位 -->
+    <view class="form-row">
+      <view class="form-group">
+        <view class="form-label">数量</view>
+        <input class="form-input" type="number" value="{{quantity}}" bindinput="onInput" bind:keyboardheightchange="onKeyboardHeightChange" data-field="quantity" />
+      </view>
+      <view class="form-group">
+        <view class="form-label">单位</view>
+        <picker range="{{units}}" value="{{unitIndex}}" bindchange="onUnitPick">
+          <view class="picker-display">{{units[unitIndex]}}</view>
+        </picker>
+      </view>
+    </view>
+
+    <!-- 购买价格 -->
+    <view class="form-group">
+      <view class="form-label">购买价格（元）</view>
+      <input class="form-input" type="digit" placeholder="如：12.5" value="{{price}}" bindinput="onInput" bind:keyboardheightchange="onKeyboardHeightChange" data-field="price" />
+    </view>
+
+    <!-- 存储位置 -->
+    <view class="form-group">
+      <view class="form-label">存储位置</view>
+      <view class="storage-grid">
+        <view class="storage-btn {{item.active ? 'active' : ''}}" wx:for="{{storages}}" wx:key="id" bindtap="onStorageTap" data-id="{{item.id}}">
+          {{item.icon}} {{item.name}}
+        </view>
+      </view>
+    </view>
+
+    <!-- 是否已开封 -->
+    <view class="form-group">
+      <view class="form-label">是否已开封</view>
+      <view class="toggle-group">
+        <view class="toggle-btn {{!opened ? 'active' : ''}}" bindtap="onOpenedToggle" data-val="no">未开封</view>
+        <view class="toggle-btn {{opened ? 'active' : ''}}" bindtap="onOpenedToggle" data-val="yes">已开封</view>
+      </view>
+    </view>
+
+    <!-- 开封详情 -->
+    <view wx:if="{{showOpenedFields}}">
+      <view class="form-group">
+        <view class="form-label">开封日期</view>
+        <picker mode="date" value="{{openedDate}}" bindchange="onDatePick" data-field="openedDate">
+          <view class="picker-display {{openedDate ? '' : 'placeholder'}}">{{openedDate || '选择日期'}}</view>
+        </picker>
+      </view>
+      <view class="form-group">
+        <view class="form-label">开封后保质天数</view>
+        <input class="form-input" type="number" placeholder="如：3" value="{{openedShelfLife}}" bindinput="onInput" bind:keyboardheightchange="onKeyboardHeightChange" data-field="openedShelfLife" />
+      </view>
+    </view>
+  </view>
+</view>
+
+<!-- 底部固定保存栏（随键盘上移 + 安全区适配，避免键盘遮挡） -->
+<view class="save-bar" style="bottom: {{keyboardHeight > 0 ? keyboardHeight + 'px' : '0'}}">
+  <button class="save-bar-btn" bindtap="onSave">保存</button>
+</view>

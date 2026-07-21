@@ -1,0 +1,57 @@
+{
+  "pages": [
+    "pages/dashboard/dashboard",
+    "pages/foodlist/foodlist",
+    "pages/stats/stats",
+    "pages/reminders/reminders",
+    "pages/add/add",
+    "pages/detail/detail",
+    "pages/profile/profile"
+  ],
+  "window": {
+    "navigationBarTitleText": "鲜管家",
+    "navigationBarBackgroundColor": "#4f46e5",
+    "navigationBarTextStyle": "white",
+    "backgroundColor": "#f5f6f8"
+  },
+  "tabBar": {
+    "color": "#9ca3af",
+    "selectedColor": "#4f46e5",
+    "backgroundColor": "#ffffff",
+    "borderStyle": "white",
+    "list": [
+      {
+        "pagePath": "pages/dashboard/dashboard",
+        "text": "总览",
+        "iconPath": "assets/tab-dashboard.png",
+        "selectedIconPath": "assets/tab-dashboard-active.png"
+      },
+      {
+        "pagePath": "pages/foodlist/foodlist",
+        "text": "食品库",
+        "iconPath": "assets/tab-food.png",
+        "selectedIconPath": "assets/tab-food-active.png"
+      },
+      {
+        "pagePath": "pages/stats/stats",
+        "text": "统计",
+        "iconPath": "assets/tab-stats.png",
+        "selectedIconPath": "assets/tab-stats-active.png"
+      },
+      {
+        "pagePath": "pages/reminders/reminders",
+        "text": "提醒",
+        "iconPath": "assets/tab-reminder.png",
+        "selectedIconPath": "assets/tab-reminder-active.png"
+      },
+      {
+        "pagePath": "pages/profile/profile",
+        "text": "我的",
+        "iconPath": "assets/tab-profile.png",
+        "selectedIconPath": "assets/tab-profile-active.png"
+      }
+    ]
+  },
+  "__usePrivacyCheck__": false,
+  "sitemapLocation": "sitemap.json"
+}

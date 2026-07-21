@@ -1,0 +1,106 @@
+<!-- pages/dashboard/dashboard.wxml -->
+<view class="container">
+  <!-- 顶部欢迎区 -->
+  <view class="dashboard-header">
+    <view class="header-text">
+      <view class="header-title">今天先处理什么？</view>
+      <view class="header-subtitle">科学管理冰箱，减少食品浪费</view>
+    </view>
+    <view class="header-action" bindtap="onAddTap">
+      <text class="header-action-icon">+</text>
+      <text>添加食品</text>
+    </view>
+  </view>
+
+  <!-- 统计卡片 2x2 -->
+  <view class="stats-grid">
+    <view class="stat-card danger" bindtap="onStatTap" data-filter="expired">
+      <view class="stat-main">
+        <view class="stat-value">{{expiredCount}}</view>
+        <view class="stat-label">已过期</view>
+      </view>
+      <view class="stat-arrow">›</view>
+    </view>
+    <view class="stat-card warning" bindtap="onStatTap" data-filter="urgent">
+      <view class="stat-main">
+        <view class="stat-value">{{urgentCount}}</view>
+        <view class="stat-label">即将到期</view>
+      </view>
+      <view class="stat-arrow">›</view>
+    </view>
+    <view class="stat-card info" bindtap="onStatTap" data-filter="all">
+      <view class="stat-main">
+        <view class="stat-value">{{totalCount}}</view>
+        <view class="stat-label">在管批次</view>
+      </view>
+      <view class="stat-arrow">›</view>
+    </view>
+    <view class="stat-card safe" bindtap="onStatTap" data-filter="all">
+      <view class="stat-main">
+        <view class="stat-value">¥{{totalValue}}</view>
+        <view class="stat-label">库存价值</view>
+      </view>
+      <view class="stat-arrow">›</view>
+    </view>
+  </view>
+
+  <!-- 浪费提示条 -->
+  <view class="waste-tip" wx:if="{{wasteValue > 0}}">
+    <text class="waste-tip-icon">💸</text>
+    <text class="waste-tip-text">已累计浪费 ¥{{wasteValue}}，记得优先吃掉快过期的食物</text>
+  </view>
+
+  <!-- 食用优先级 -->
+  <view class="section">
+    <view class="section-header">
+      <view class="section-title">🚨 食用优先级</view>
+      <view class="section-more" wx:if="{{priorityList.length > 0}}" bindtap="onGoToFoodList">查看全部 ›</view>
+    </view>
+    <view wx:if="{{priorityList.length > 0}}">
+      <view class="priority-item" wx:for="{{priorityList}}" wx:key="id" bindtap="onPriorityTap" data-id="{{item.id}}">
+        <view class="priority-dot {{item.dotClass}}"></view>
+        <view class="priority-info">
+          <view class="priority-name">{{item.name}}</view>
+          <view class="priority-meta">{{item.meta}}</view>
+        </view>
+        <view class="priority-days {{item.daysClass}}">{{item.daysText}}</view>
+      </view>
+    </view>
+    <view wx:else class="empty-state compact">
+      <view class="empty-icon small">📋</view>
+      <view class="empty-text">暂无食品记录</view>
+      <view class="empty-hint">点击下方「添加食品」开始记录</view>
+      <view class="empty-btn" bindtap="onAddTap">立即添加</view>
+    </view>
+  </view>
+
+  <!-- 分类概览 -->
+  <view class="section">
+    <view class="section-header">
+      <view class="section-title">📦 分类概览</view>
+    </view>
+    <view wx:if="{{categorySummary.length > 0}}">
+      <view class="category-row" wx:for="{{categorySummary}}" wx:key="name">
+        <view class="category-left">
+          <view class="category-name">{{item.name}}</view>
+          <view class="category-bar-track">
+            <view class="category-bar-fill {{item.hasExpired ? 'expired' : 'ok'}}" style="width: {{item.percent}}%;"></view>
+          </view>
+        </view>
+        <view class="category-right {{item.hasExpired ? 'expired' : 'ok'}}">
+          <text class="category-num">{{item.total}}</text>
+          <text class="category-unit">项</text>
+        </view>
+      </view>
+    </view>
+    <view wx:else class="empty-state compact">
+      <view class="empty-text">暂无分类数据</view>
+    </view>
+  </view>
+</view>
+
+<!-- 悬浮添加按钮 -->
+<button class="fab-btn" bindtap="onAddTap">
+  <text class="fab-icon">+</text>
+  <text>添加食品</text>
+</button>

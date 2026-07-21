@@ -1,0 +1,32 @@
+<!-- pages/detail/detail.wxml -->
+<view class="container" style="padding-bottom:40rpx;" wx:if="{{food}}">
+  <!-- Header -->
+  <view style="text-align:center;margin-bottom:32rpx;">
+    <view style="font-size:80rpx;">{{catIcon}}</view>
+    <view style="font-size:36rpx;font-weight:600;margin-top:16rpx;">{{food.name}}</view>
+    <view wx:if="{{food.brand}}" style="font-size:26rpx;color:#9ca3af;">{{food.brand}}</view>
+    <view style="margin-top:16rpx;">
+      <view class="days-badge {{statusClass}}">{{daysText}}</view>
+      <view wx:if="{{processedText}}" class="processed-badge">{{processedText}}</view>
+    </view>
+  </view>
+
+  <!-- Detail rows -->
+  <view class="section">
+    <view class="detail-row" wx:for="{{detailRows}}" wx:key="label">
+      <view class="detail-label">{{item.label}}</view>
+      <view class="detail-value" style="{{item.isExpired ? 'color:#ef4444' : ''}}">{{item.value}}</view>
+    </view>
+  </view>
+
+  <!-- Actions -->
+  <view class="action-row">
+    <button class="act-btn act-edit" bindtap="onEdit">编辑</button>
+    <button class="act-btn act-eaten" bindtap="onEaten">已食用</button>
+    <button class="act-btn act-discard" bindtap="onDiscarded">已丢弃</button>
+  </view>
+  <view class="action-row" style="margin-top:16rpx;">
+    <button class="act-btn act-partial" bindtap="onPartial">部分食用（-1）</button>
+    <button class="act-btn act-delete" bindtap="onDelete">删除</button>
+  </view>
+</view>

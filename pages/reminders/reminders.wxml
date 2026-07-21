@@ -1,0 +1,42 @@
+<!-- pages/reminders/reminders.wxml -->
+<view class="container">
+  <!-- Settings -->
+  <view class="section">
+    <view class="section-title">🔔 提醒设置</view>
+
+    <view class="form-group">
+      <view class="form-label">到期前提醒天数</view>
+      <view class="toggle-group">
+        <view class="toggle-btn {{item.active ? 'active' : ''}}" wx:for="{{daysOptions}}" wx:key="val" bindtap="onDaysTap" data-val="{{item.val}}">
+          {{item.label}}
+        </view>
+      </view>
+    </view>
+
+    <view class="form-group">
+      <view class="form-label">提醒时间</view>
+      <picker mode="time" value="{{remindTime}}" bindchange="onTimeInput">
+        <view class="form-input">{{remindTime}}</view>
+      </picker>
+    </view>
+  </view>
+
+  <!-- Reminder List -->
+  <view class="section">
+    <view class="section-title">⚡ 当前提醒</view>
+    <view wx:if="{{reminderList.length > 0}}">
+      <view class="reminder-item" wx:for="{{reminderList}}" wx:key="id" bindtap="onReminderTap" data-id="{{item.id}}">
+        <view class="reminder-icon {{item.iconClass}}">{{item.icon}}</view>
+        <view class="reminder-info">
+          <view class="reminder-name">{{item.name}}</view>
+          <view class="reminder-detail">{{item.detail}}</view>
+        </view>
+        <view class="reminder-date {{item.dateClass}}">{{item.daysText}}</view>
+      </view>
+    </view>
+    <view wx:else class="empty-state">
+      <view class="empty-icon">🎉</view>
+      <view class="empty-text">近期没有需要提醒的食品</view>
+    </view>
+  </view>
+</view>

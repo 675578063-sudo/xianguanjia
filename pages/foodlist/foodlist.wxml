@@ -1,0 +1,34 @@
+<!-- pages/foodlist/foodlist.wxml -->
+<view class="container">
+  <!-- Search -->
+  <view class="search-bar">
+    <input class="search-input" placeholder="搜索食品名称..." value="{{searchKeyword}}" bindinput="onSearchInput" confirm-type="search" />
+  </view>
+
+  <!-- Filter -->
+  <view class="filter-bar">
+    <view class="filter-btn {{currentFilter === item.key ? 'active' : ''}}" wx:for="{{filters}}" wx:key="key" bindtap="onFilterTap" data-key="{{item.key}}">
+      {{item.name}}
+    </view>
+  </view>
+
+  <!-- Food List -->
+  <view wx:if="{{foodList.length > 0}}">
+    <view class="food-card {{item.statusClass}}" wx:for="{{foodList}}" wx:key="id" bindtap="onFoodTap" data-id="{{item.id}}">
+      <view class="food-icon">{{item.icon}}</view>
+      <view class="food-info">
+        <view class="food-name">{{item.name}}</view>
+        <view class="food-meta">{{item.meta}}</view>
+      </view>
+      <view class="days-badge {{item.badgeClass}}">{{item.daysText}}</view>
+    </view>
+  </view>
+  <view wx:else class="empty-state">
+    <view class="empty-icon">{{currentFilter !== 'all' ? '🔍' : '📋'}}</view>
+    <view class="empty-text">{{currentFilter !== 'all' ? '该分类暂无食品' : '暂无食品记录'}}</view>
+    <view class="empty-hint">点击下方按钮添加食品</view>
+  </view>
+</view>
+
+<!-- FAB -->
+<view class="fab-btn" bindtap="onAddTap">+ 添加食品</view>
