@@ -16,19 +16,26 @@ Page({
   },
 
   refreshData() {
-    const foods = getFoods();
+    // 仅统计在管（未食用/丢弃）食品
+    const allFoods = getFoods();
+    const foods = allFoods.filter(f => f.business_status === 'active');
     const wasteRecords = getWasteRecords();
 
-    const totalValue = foods.reduce((s, f) => s + (f.price || 0) * (f.quantity || 1), 0);
+    // 库存价值按剩余数量比例计算
+    const totalValue = foods.reduce((s, f) => {
+      const remain = (f.remaining_quantity != null) ? f.remaining_quantity : (f.quantity || 1);
+      return s + (f.price || 0) * remain;
+    }, 0);
     const wasteValue = wasteRecords.reduce((s, w) => s + (w.price || 0), 0);
 
-    // 分类分布
+    // 分类分布（仅在管，count/value 按剩余数量）
     const catMap = {};
     foods.forEach(f => {
       const cat = getCategoryById(f.category);
+      const remain = (f.remaining_quantity != null) ? f.remaining_quantity : (f.quantity || 1);
       if (!catMap[f.category]) catMap[f.category] = { name: cat.icon + ' ' + cat.name, count: 0, value: 0 };
-      catMap[f.category].count += (f.quantity || 1);
-      catMap[f.category].value += (f.price || 0) * (f.quantity || 1);
+      catMap[f.category].count += remain;
+      catMap[f.category].value += (f.price || 0) * remain;
     });
 
     const maxCount = Math.max(...Object.values(catMap).map(d => d.count), 1);

@@ -17,6 +17,15 @@ Page({
   },
 
   onShow() {
+    // 接收总览页统计卡跳转带来的筛选条件（通过 globalData 桥接）
+    const app = getApp();
+    if (app && app.globalData && app.globalData.pendingFoodlistFilter) {
+      const f = app.globalData.pendingFoodlistFilter;
+      if (this.data.filters.some(x => x.key === f)) {
+        this.setData({ currentFilter: f });
+      }
+      app.globalData.pendingFoodlistFilter = null;
+    }
     this.refreshList();
   },
 

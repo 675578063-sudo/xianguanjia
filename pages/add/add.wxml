@@ -6,17 +6,6 @@
     <input class="form-input" placeholder="如：伊利纯牛奶" value="{{name}}" bindinput="onInput" bind:keyboardheightchange="onKeyboardHeightChange" data-field="name" />
   </view>
 
-  <!-- 必填：分类（后置可选网格） -->
-  <view class="form-group">
-    <view class="form-label">选择分类</view>
-    <view class="category-grid">
-      <view class="category-btn {{item.active ? 'active' : ''}}" wx:for="{{categories}}" wx:key="id" bindtap="onCategoryTap" data-id="{{item.id}}">
-        <view class="cat-icon">{{item.icon}}</view>
-        {{item.name}}
-      </view>
-    </view>
-  </view>
-
   <!-- 必填：保质期填写方式（二选一） -->
   <view class="form-group">
     <view class="form-label">保质期填写方式</view>
@@ -50,7 +39,18 @@
         <view class="picker-display {{expiryDate ? '' : 'placeholder'}}">{{expiryDate || '选择日期'}}</view>
       </picker>
     </view>
-  </block>
+    </block>
+
+  <!-- 必填：分类（后置到日期信息之后，首屏不被分类网格占用） -->
+  <view class="form-group">
+    <view class="form-label">选择分类</view>
+    <view class="category-grid">
+      <view class="category-btn {{item.active ? 'active' : ''}}" wx:for="{{categories}}" wx:key="id" bindtap="onCategoryTap" data-id="{{item.id}}">
+        <view class="cat-icon">{{item.icon}}</view>
+        {{item.name}}
+      </view>
+    </view>
+  </view>
 
   <!-- 保存前预览：最终到期日 + 来源（两种模式均显示） -->
   <view class="expiry-preview" wx:if="{{expiryPreview}}">

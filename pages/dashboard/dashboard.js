@@ -102,6 +102,12 @@ Page({
 
   onStatTap(e) {
     const filter = e.currentTarget.dataset.filter;
+    // switchTab 无法带参，用 globalData 桥接 filter 到食品库页
+    const app = getApp();
+    if (app) {
+      if (!app.globalData) app.globalData = {};
+      app.globalData.pendingFoodlistFilter = filter;
+    }
     wx.switchTab({ url: '/pages/foodlist/foodlist' });
   }
 });
