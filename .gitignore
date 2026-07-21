@@ -15,5 +15,5 @@ node_modules/
 dist/
 build/
 
-# 微信开发者工具本机私有配置（含本机 AppID 与本地设置，按需保留或忽略）
-# project.private.config.json
+# 微信开发者工具本机私有配置（含本机 AppID 与本地设置，不纳入版本库）
+project.private.config.json
