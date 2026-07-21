@@ -39,6 +39,8 @@ Page({
       { label: '分类', value: cat.icon + ' ' + cat.name },
       { label: '剩余数量', value: remaining + ' ' + (food.unit || '个') },
       { label: '存储位置', value: storage.icon + ' ' + storage.name },
+      food.gtin ? { label: '商品编码', value: food.gtin + (food.code_type ? '（' + food.code_type + '）' : '') } : null,
+      food.info_source && food.info_source !== 'manual' ? { label: '资料来源', value: food.info_source === 'personal' ? '个人历史模板' : '扫码识别' } : null,
       { label: '生产日期', value: formatDate(food.productionDate) },
       food.shelfLife ? { label: '保质期', value: food.shelfLife + ' 天' } : null,
       { label: '到期日期', value: formatDate(expiry), isExpired: days < 0 },

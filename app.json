@@ -6,7 +6,9 @@
     "pages/reminders/reminders",
     "pages/add/add",
     "pages/detail/detail",
-    "pages/profile/profile"
+    "pages/profile/profile",
+    "pages/scan/scan",
+    "pages/scanresult/scanresult"
   ],
   "window": {
     "navigationBarTitleText": "鲜管家",

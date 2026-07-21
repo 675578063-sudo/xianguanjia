@@ -1,6 +1,7 @@
 // pages/add/add.js - 添加/编辑食品页
 const { CATEGORIES, STORAGE_LOCATIONS, UNITS, getCategoryById, generateId, resolveExpirySource, getExpiryDate } = require('../../utils/data');
 const { getFoods, saveFoods } = require('../../utils/storage');
+const { requestSubscribe } = require('../../utils/subscribe');
 
 const SOURCE_TEXT = {
   computed: '生产日期 + 保质期',
@@ -98,6 +99,11 @@ Page({
       selectedStorage: id,
       storages: STORAGE_LOCATIONS.map(s => ({ ...s, active: s.id === id }))
     });
+  },
+
+  // 名称输入框右侧扫码图标：跳转到扫码页（从添加页进入，确认后返回本页）
+  onScanTap() {
+    wx.navigateTo({ url: '/pages/scan/scan?fromAdd=1' });
   },
 
   onDateModeChange(e) {
@@ -244,6 +250,7 @@ Page({
     foodData.expiry_source = resolveExpirySource(foodData);
 
     const foods = getFoods();
+    const wasEmpty = foods.length === 0; // 本次为首件
     if (isEdit) {
       const idx = foods.findIndex(f => f.id === editId);
       if (idx >= 0) foods[idx] = foodData;
@@ -252,6 +259,8 @@ Page({
     }
 
     saveFoods(foods);
+    // 文档 11.2：成功添加第一件商品后再请求订阅消息授权
+    if (!isEdit && wasEmpty) requestSubscribe();
     wx.showToast({ title: isEdit ? '已更新' : '已添加', icon: 'success' });
 
     setTimeout(() => {

@@ -1,6 +1,7 @@
 // pages/profile/profile.js - 个人中心与微信登录
 const storage = require('../../utils/storage');
 const dataUtil = require('../../utils/data');
+const { requestSubscribe, TEMPLATE_IDS } = require('../../utils/subscribe');
 
 Page({
   data: {
@@ -278,19 +279,19 @@ Page({
     app.globalData.settings = settings;
   },
 
-  // 请求订阅消息授权
+  // 请求订阅消息授权（文档 11.2：授权状态以微信实际结果为准，不承诺永久）
   onRequestSubscribe() {
-    const tmplIds = ['your_template_id_1', 'your_template_id_2']; // 需要在微信公众平台申请模板ID
-    wx.requestSubscribeMessage({
-      tmplIds: tmplIds,
-      success: res => {
-        wx.showToast({ title: '订阅成功', icon: 'success' });
-      },
-      fail: err => {
-        wx.showToast({ title: '请在设置中开启通知', icon: 'none' });
-        console.error('订阅消息授权失败', err);
-      }
-    });
+    if (TEMPLATE_IDS[0].indexOf('your_template_id') === 0) {
+      wx.showModal({
+        title: '订阅消息未配置',
+        content: '请在微信公众平台申请订阅消息模板 ID，并在 utils/subscribe.js 中替换占位值后，才能真机接收提醒。',
+        showCancel: false,
+        confirmText: '知道了'
+      });
+      return;
+    }
+    requestSubscribe();
+    wx.showToast({ title: '已发起授权', icon: 'none' });
   },
 
   // 关于页面

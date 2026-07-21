@@ -4,7 +4,8 @@ const KEYS = {
   foods: 'xianguanjia_foods',
   waste: 'xianguanjia_waste',
   settings: 'xianguanjia_settings',
-  user: 'xianguanjia_user'
+  user: 'xianguanjia_user',
+  products: 'xianguanjia_products'
 };
 
 // 数据迁移：为旧版本（无新字段）的食品记录补默认值
@@ -12,15 +13,40 @@ const KEYS = {
 // remaining_quantity: 剩余数量（部分食用后递减）
 // expiry_source: 到期日来源 computed=生产+保质期 / direct=直接到期日 / opened=开封 / unknown=未知
 // events: 操作事件日志（创建/开封/部分食用/食用/丢弃），用于"商品+批次+事件"数据基础
+// product_id/gtin/code_type/info_source/scan_session_id: 扫码识别新增字段（文档 10.1/10.2）
 function normalizeFood(f) {
   if (!f || typeof f !== 'object') return f;
   return {
     ...f,
+    product_id: f.product_id || '',
+    gtin: f.gtin || '',
+    code_type: f.code_type || '',
+    info_source: f.info_source || 'manual',
+    scan_session_id: f.scan_session_id || '',
     business_status: f.business_status || 'active',
     remaining_quantity: (f.remaining_quantity != null) ? f.remaining_quantity : (f.quantity || 1),
     expiry_source: f.expiry_source || 'unknown',
     events: Array.isArray(f.events) ? f.events : []
   };
+}
+
+// 个人商品模板（扫码分层查询第一层，文档 7.1）
+function getProducts() {
+  try {
+    const data = wx.getStorageSync(KEYS.products);
+    const arr = data ? JSON.parse(data) : [];
+    return Array.isArray(arr) ? arr : [];
+  } catch (e) {
+    return [];
+  }
+}
+
+function saveProducts(products) {
+  try {
+    wx.setStorageSync(KEYS.products, JSON.stringify(products));
+  } catch (e) {
+    console.error('保存商品模板失败', e);
+  }
 }
 
 function getFoods() {
@@ -109,5 +135,7 @@ module.exports = {
   saveSettings,
   getUserInfo,
   saveUserInfo,
-  clearUserInfo
+  clearUserInfo,
+  getProducts,
+  saveProducts
 };

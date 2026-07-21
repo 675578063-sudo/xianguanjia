@@ -86,6 +86,12 @@ Page({
   },
 
   onAddTap() {
-    wx.navigateTo({ url: '/pages/add/add' });
+    wx.showActionSheet({
+      itemList: ['扫码识别', '手动添加'],
+      success: (res) => {
+        if (res.tapIndex === 0) wx.navigateTo({ url: '/pages/scan/scan' });
+        else wx.navigateTo({ url: '/pages/add/add' });
+      }
+    });
   }
 });
