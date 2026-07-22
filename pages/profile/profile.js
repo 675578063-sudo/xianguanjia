@@ -72,14 +72,26 @@ Page({
     });
   },
 
-  // 头像按钮点击（调试用 + 防止事件冒泡）
+  // 头像按钮点击：兜底检测隐私指引未配置的情况
   onAvatarTap() {
-    console.log('头像按钮被点击');
+    // 记录本次点击，1.2s 后若仍未触发 chooseAvatar 回调，说明隐私接口被静默拦截
+    // （多半是微信后台未发布《隐私保护指引》），给出明确引导而非"没反应"。
+    this._avatarChosen = false;
+    setTimeout(() => {
+      if (!this._avatarChosen && !this.data.isLoggedIn) {
+        wx.showModal({
+          title: '需要隐私授权',
+          content: '若点击头像无反应，请先到微信公众平台「设置 → 服务内容 → 用户隐私保护指引」发布并声明头像用途，发布后重试。',
+          showCancel: false,
+          confirmText: '知道了'
+        });
+      }
+    }, 1200);
   },
 
   // 微信登录 - 获取头像
   onChooseAvatar(e) {
-    console.log('chooseAvatar 回调触发', e);
+    this._avatarChosen = true;
     if (!e.detail || !e.detail.avatarUrl) {
       console.error('未获取到头像URL');
       return;
@@ -217,7 +229,7 @@ Page({
     });
   },
 
-  // 导出数据
+  // 导出数据（本地数据，采用「写文件 + 复制剪贴板」双保险，任何环境都有反馈）
   onExportData() {
     const foods = storage.getFoods();
     const waste = storage.getWasteRecords();
@@ -228,32 +240,41 @@ Page({
       user: this.data.userInfo
     };
     const jsonStr = JSON.stringify(exportData, null, 2);
-    // 写入临时文件
-    const fs = wx.getFileSystemManager();
-    const path = wx.env.USER_DATA_PATH + '/xianguanjia_export.json';
-    fs.writeFile({
-      filePath: path,
-      data: jsonStr,
-      encoding: 'utf8',
-      success: () => {
-        wx.shareFileMessage({
-          filePath: path,
-          fileName: '鲜管家数据_' + new Date().toISOString().split('T')[0] + '.json',
-          success: () => {
-            wx.showToast({ title: '分享成功', icon: 'success' });
-          },
-          fail: () => {
-            // 如果分享失败，复制到剪贴板
-            wx.setClipboardData({
-              data: jsonStr,
-              success: () => {
-                wx.showToast({ title: '已复制到剪贴板', icon: 'success' });
-              }
+
+    // 兜底：始终复制到剪贴板，保证有反馈
+    const copyAndToast = (msg) => {
+      wx.setClipboardData({
+        data: jsonStr,
+        success: () => wx.showToast({ title: msg || '已复制到剪贴板', icon: 'none' }),
+        fail: () => wx.showToast({ title: '导出失败', icon: 'none' })
+      });
+    };
+
+    try {
+      const fs = wx.getFileSystemManager();
+      const path = wx.env.USER_DATA_PATH + '/xianguanjia_export.json';
+      fs.writeFile({
+        filePath: path,
+        data: jsonStr,
+        encoding: 'utf8',
+        success: () => {
+          // 优先尝试系统分享（真机可用；开发者工具不支持时自动降级到剪贴板）
+          if (wx.shareFileMessage) {
+            wx.shareFileMessage({
+              filePath: path,
+              fileName: '鲜管家数据_' + new Date().toISOString().split('T')[0] + '.json',
+              success: () => wx.showToast({ title: '已唤起分享', icon: 'none' }),
+              fail: () => copyAndToast('已复制到剪贴板')
             });
+          } else {
+            copyAndToast('已复制到剪贴板');
           }
-        });
-      }
-    });
+        },
+        fail: () => copyAndToast('已复制到剪贴板')
+      });
+    } catch (e) {
+      copyAndToast('已复制到剪贴板');
+    }
   },
 
   // 提醒天数变更

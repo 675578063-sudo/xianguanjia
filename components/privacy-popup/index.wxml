@@ -1,6 +1,6 @@
 <!-- 隐私授权弹窗：摄像头/相册/头像等隐私接口调用前由框架触发 -->
 <view class="privacy-popup" wx:if="{{show}}">
-  <view class="privacy-mask"></view>
+  <view class="privacy-mask" bindtap="handleDisagree"></view>
   <view class="privacy-dialog">
     <view class="privacy-title">隐私保护指引</view>
     <scroll-view scroll-y class="privacy-body">
