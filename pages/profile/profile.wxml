@@ -7,7 +7,7 @@
     <block wx:if="{{!isLoggedIn}}">
       <view class="login-area">
         <view class="avatar-placeholder">
-          <button class="avatar-btn" open-type="chooseAvatar" bind:chooseavatar="onChooseAvatar" catchtap="onAvatarTap">
+          <button class="avatar-btn" open-type="chooseAvatar" bind:chooseavatar="onChooseAvatar">
             <image class="avatar-img" src="/assets/default-avatar.png" mode="aspectFill"></image>
             <view class="avatar-tip">点击选择头像</view>
           </button>
@@ -20,7 +20,7 @@
     <block wx:else>
       <view class="user-info-area">
         <view class="avatar-editable">
-          <button class="avatar-btn-small" open-type="chooseAvatar" bind:chooseavatar="onChooseAvatar" catchtap="onAvatarTap">
+          <button class="avatar-btn-small" open-type="chooseAvatar" bind:chooseavatar="onChooseAvatar">
             <image class="avatar-img-small" src="{{userInfo.avatarUrl}}" mode="aspectFill"></image>
           </button>
           <view class="edit-badge">✎</view>
@@ -121,4 +121,6 @@
     <view class="about-text">v1.0 · 食品保质期管理小程序</view>
   </view>
 
+  <!-- 隐私授权弹窗（选择头像属隐私接口，开启隐私校验后需先授权） -->
+  <privacy-popup></privacy-popup>
 </view>

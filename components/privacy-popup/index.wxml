@@ -1,0 +1,16 @@
+<!-- 隐私授权弹窗：摄像头/相册/头像等隐私接口调用前由框架触发 -->
+<view class="privacy-popup" wx:if="{{show}}">
+  <view class="privacy-mask"></view>
+  <view class="privacy-dialog">
+    <view class="privacy-title">隐私保护指引</view>
+    <scroll-view scroll-y class="privacy-body">
+      <view class="privacy-text">感谢您使用「鲜管家」。在使用摄像头扫码、从相册识别、选择头像等功能前，请阅读</view>
+      <text class="privacy-link" bindtap="openPrivacyContract">{{privacyContractName || '《隐私保护指引》'}}</text>
+      <view class="privacy-text">。当您点击「同意」并开始使用，即表示您已理解并同意该指引内容。</view>
+    </scroll-view>
+    <view class="privacy-btns">
+      <view class="privacy-btn disagree" bindtap="handleDisagree">拒绝</view>
+      <button class="privacy-btn agree" id="agree-btn" open-type="agreePrivacyAuthorization" bindagreeprivacyauthorization="handleAgree">同意</button>
+    </view>
+  </view>
+</view>

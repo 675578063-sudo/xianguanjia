@@ -275,13 +275,33 @@ view, text, image, button, input, navigator, scroll-view {
 
 .form-input {
   width: 100%;
-  padding: 20rpx 28rpx;
+  min-height: 88rpx;
+  padding: 22rpx 28rpx;
+  border: 1rpx solid #e5e7eb;
+  border-radius: 12rpx;
+  font-size: 28rpx;
+  line-height: 44rpx;
+  background: #ffffff;
+  color: #1a1a2e;
+  box-sizing: border-box;
+}
+
+/* picker 内展示文字：与输入框等高、垂直居中 */
+.picker-display {
+  width: 100%;
+  min-height: 88rpx;
+  padding: 22rpx 28rpx;
   border: 1rpx solid #e5e7eb;
   border-radius: 12rpx;
   font-size: 28rpx;
   background: #ffffff;
   color: #1a1a2e;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
 }
+
+.picker-display.placeholder { color: #9ca3af; }
 
 .form-row {
   display: flex;

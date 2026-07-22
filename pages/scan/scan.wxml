@@ -39,4 +39,7 @@
       <text class="scan-act-label">重扫</text>
     </view>
   </view>
+
+  <!-- 隐私授权弹窗（摄像头/相册属隐私接口，开启隐私校验后需先授权） -->
+  <privacy-popup></privacy-popup>
 </view>

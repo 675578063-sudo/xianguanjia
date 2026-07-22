@@ -1,6 +1,7 @@
 // utils/subscribe.js - 微信订阅消息（文档 11.2）
 // 仅在用户成功添加第一件商品后调用，不在进入小程序时索取。
-// 占位模板 ID 需在微信公众平台申请真实模板后替换；未配置时跳过，避免误报成功。
+// 占位模板 ID 需在【微信公众平台 → 功能 → 订阅消息 → 我的模板】申请真实模板后替换本数组；
+// 未配置（仍为 your_template_id_*）时自动跳过，绝不伪造成功，也不承诺永久提醒。
 const TEMPLATE_IDS = ['your_template_id_1', 'your_template_id_2'];
 
 function requestSubscribe() {

@@ -54,6 +54,11 @@
       }
     ]
   },
-  "__usePrivacyCheck__": false,
+  "permission": {
+    "scope.camera": {
+      "desc": "用于扫码识别商品条码与二维码"
+    }
+  },
+  "__usePrivacyCheck__": true,
   "sitemapLocation": "sitemap.json"
 }
